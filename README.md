@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ## Run
 
 ```bash
-python -m python -m evaluate_agent
+python -m evaluate_agent
 ```
 
 ## Requirements
