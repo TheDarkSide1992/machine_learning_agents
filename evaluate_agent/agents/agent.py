@@ -1,6 +1,6 @@
 from autogen import UserProxyAgent
-from evaulate_agent.config import LLM_CONFIG as CONFIG
-from evaulate_agent.tools import make_get_request
+from evaluate_agent.config import LLM_CONFIG as CONFIG
+from evaluate_agent.tools import make_get_request
 
 
 def create_user_proxy(name:str = "user_proxy") -> UserProxyAgent:
