@@ -14,7 +14,7 @@ _summarization_agent_prompt = """You are a helpful AI assistant\n.
                                 Important: Facts, explanations of theory, \n
                                 Very Important. conclusions, factual evidence\n   
                                 
-                                keep the entire summery entire between a minimum of 500 characters and a maximum of 800 characters, do not exceed the maximum limit.\n
+                                keep the entire summery entire between a minimum of 250 characters and a maximum of 800 characters, do not exceed the maximum limit.\n
                             
                                  ou will provide a result in the following format:\n
                                 '\n
@@ -25,14 +25,15 @@ _summarization_agent_prompt = """You are a helpful AI assistant\n.
                                 \n
                                 [summery]\n
                                 '\n
-
+                                Match relevant information to appropriate fields.\n
+                                You can not expect existing field values to have the marked the field values
                                 the summery located in the field '[summery]'\n
-                                If a field isn't used replace it  with 'UNKNOWN'
                                 
                                 Dont include any references to images in your response.\n.
                                 Do not return more than one summer.\n
                                 Do not return the original input\n
                                 Do not make up new fields\n
+                                IF Data for a field or value is mising do not make up new information. \n
                                 
                                 Return 'TERMINATE' when the task is done, On its own line at the end.\n"""
 
