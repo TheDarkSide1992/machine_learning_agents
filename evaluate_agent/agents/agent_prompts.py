@@ -67,7 +67,7 @@ internal_critique_prompt = (
     - If there are issues, respond with:
       CRITIQUE: <what is wrong + smallest fix needed>
     - Do NOT propose your own final answer; only judge and comment.
-    - Do NOT ask for anything to be added about the papers other than a broader search term and time frame of release
+    - Do NOT ask the user for extra input
     """
 )
 
@@ -81,6 +81,7 @@ ARTICLE_PROMPT = """
     - For each paper include: title; authors; venue; year; citation count; a one-line note showing how it meets the constraints.
     - If no qualifying paper is found, say so and list the closest valid alternatives briefly.
     - Keep the response concise.
+    - Do NOT ask the user for extra input
     - you can use the http_request_tool to search for papers
     To solve this task you have a http_request_tool available to you.
     The Tool takes a json format, look at the tools description

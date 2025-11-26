@@ -59,15 +59,11 @@ def make_get_request(JsonString:str):
     if filter_string:
         params = {
             "search": search_query,
-            "filter": filter_string,
-            "sample":  "20",
-            "seed": "2"
+            "filter": filter_string
         }
     else:
         params = {
             "search": search_query,
-            "sample": "20",
-            "seed": "2"
         }
     try:
         response = requests.get(base_url, params=params)
@@ -81,4 +77,4 @@ def make_get_request(JsonString:str):
     if len(json.loads(json.dumps(data.get("results")))) == 0:
         raise ValueError("Tool invariant failed: no results found")
 
-    return json.dumps(data.get("results"))
+    return json.dumps(data.get("results"[0:10]))

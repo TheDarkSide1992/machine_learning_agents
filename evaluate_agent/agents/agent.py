@@ -8,7 +8,7 @@ from evaluate_agent.config import LLM_CONFIG as CONFIG
 from evaluate_agent.tools import make_get_request
 from evaluate_agent.agents.agent_prompts import JUDGE_PROMPT, internal_critique_prompt, ARTICLE_PROMPT
 
-_config = CONFIG["config_list"][0]
+_config = CONFIG["config_list"][1]
 
 def create_article_agent() -> ConversableAgent:
     agent =  ConversableAgent(
