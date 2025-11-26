@@ -59,16 +59,19 @@ def make_get_request(JsonString:str):
     if filter_string:
         params = {
             "search": search_query,
-            "filter": filter_string
+            "filter": filter_string,
+            "sample":  "20",
+            "seed": "2"
         }
     else:
         params = {
-            "search": search_query
+            "search": search_query,
+            "sample": "20",
+            "seed": "2"
         }
     try:
         response = requests.get(base_url, params=params)
         data = json.loads(json.dumps(response.json()))
-        print(data)
     except JSONDecodeError:
         raise ValueError("Tool invariant failed: API did not return valid JSON")
 
@@ -78,4 +81,4 @@ def make_get_request(JsonString:str):
     if len(json.loads(json.dumps(data.get("results")))) == 0:
         raise ValueError("Tool invariant failed: no results found")
 
-    return data
+    return json.dumps(data.get("results"))

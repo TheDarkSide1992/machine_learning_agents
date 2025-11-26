@@ -42,12 +42,12 @@ def create_judge_agent() -> AssistantAgent:
 
 def make_groupchat(user_proxy, internal_critic, article_agent) -> GroupChatManager:
     group = GroupChat(
-        agents=[user_proxy, internal_critic, article_agent],
+        agents=[user_proxy, article_agent, internal_critic],
         messages=[],
         max_round=20,
         speaker_selection_method="auto",
     )
-    return GroupChatManager(groupchat=group, llm_config=_config)
+    return GroupChatManager(groupchat=group)
 
 def create_user_proxy(name:str = "user_proxy") -> UserProxyAgent:
     agent = UserProxyAgent(

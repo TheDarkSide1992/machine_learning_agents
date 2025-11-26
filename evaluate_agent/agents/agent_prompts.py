@@ -66,7 +66,9 @@ internal_critique_prompt = (
       A <short-justification> could be 'The given article does not match the topic of the given user request.' 
     - If there are issues, respond with:
       CRITIQUE: <what is wrong + smallest fix needed>
-    - Do NOT propose your own final answer; only judge and comment."""
+    - Do NOT propose your own final answer; only judge and comment.
+    - Do NOT ask for anything to be added about the papers other than a broader search term and time frame of release
+    """
 )
 
 ARTICLE_PROMPT = """
@@ -74,15 +76,16 @@ ARTICLE_PROMPT = """
     Task: Find a research paper on [topic] that was published [in/before/after] [year] and has [number of citations] citations.
     This could be topic=
     Instructions:
-    - Parse the slots: topic, comparator (in|before|after), year, citation_count.
+    - Parse the slots: topic, comparator (in|before|after), year, citation_count, citation comparator(exactly|less_than|more_than).
     - Return papers that satisfy all constraints. Prefer exact citation_count; if exact is not available, choose >= citation_count and clearly note the variance.
     - For each paper include: title; authors; venue; year; citation count; a one-line note showing how it meets the constraints.
     - If no qualifying paper is found, say so and list the closest valid alternatives briefly.
     - Keep the response concise.
+    - you can use the http_request_tool to search for papers
     To solve this task you have a http_request_tool available to you.
     The Tool takes a json format, look at the tools description
     
-    THe relevant citation operators looks lie the following 
+    The relevant citation operators looks lie the following 
     '
     YEAR_OPERATORS = {
     "in": ":",
@@ -100,4 +103,13 @@ ARTICLE_PROMPT = """
         "at_least": ">="
     }
     '
+    
+    example of a request
+    {
+        "search_query": "machine learning",
+        "citation_count": "3",
+        "year_operator": "after",
+        "year" : "2012",
+        "citation_operator": "more_than"
+    }
 """
