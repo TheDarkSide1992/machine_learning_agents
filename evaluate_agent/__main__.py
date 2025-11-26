@@ -1,4 +1,4 @@
-from evaulate_agent.agents import start
+from evaluate_agent.agents import start
 
 def main(): #TODO Make it run the agents as exegesis requires
     print("Starting up.....")
