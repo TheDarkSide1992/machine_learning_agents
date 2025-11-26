@@ -77,4 +77,4 @@ def make_get_request(JsonString:str):
     if len(json.loads(json.dumps(data.get("results")))) == 0:
         raise ValueError("Tool invariant failed: no results found")
 
-    return json.dumps(data.get("results"[0:10]))
+    return json.dumps(data.get("results"[0:4]))
