@@ -7,7 +7,6 @@ def create_user_proxy(name:str = "user_proxy") -> UserProxyAgent:
     # User proxy to drive the GroupChat
     user_proxy = UserProxyAgent(
         name=f"{name}",
-        llm_config=CONFIG[0],
         human_input_mode="NEVER",
         # GroupChat termination condition: when product_agent sends FINAL_ANSWER + TERMINATE
         is_termination_msg=lambda m: (m.get("content") or "").rstrip().endswith("TERMINATE"),

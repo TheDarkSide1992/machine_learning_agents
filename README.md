@@ -9,7 +9,7 @@ Install the Python dependencies.
 ## set up venv
 
 ```bash
-pypthon -m venv .venv
+python -m venv .venv
 ```
 
 ```bash
@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ## Run
 
 ```bash
-python -m  python -m evaulate_agent
+python -m python -m evaulate_agent
 ```
 
 ## Requirements
