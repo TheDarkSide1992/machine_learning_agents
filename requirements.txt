@@ -1,3 +1,4 @@
+requests
 autogen-agentchat @ git+https://github.com/patrickstolc/autogen.git@0.2#egg=autogen-agentchat
 autogen==0.3.1
 mistralai==1.2.3
