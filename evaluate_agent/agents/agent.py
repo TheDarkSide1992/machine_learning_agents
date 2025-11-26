@@ -8,7 +8,7 @@ from evaluate_agent.config import LLM_CONFIG as CONFIG
 from evaluate_agent.tools import make_get_request
 from evaluate_agent.agents.agent_prompts import JUDGE_PROMPT, internal_critique_prompt, ARTICLE_PROMPT
 
-_config = CONFIG["config_list"][1]
+_config = CONFIG["config_list"][0]
 
 def create_article_agent() -> ConversableAgent:
     agent =  ConversableAgent(
@@ -85,6 +85,7 @@ def run_with_internal_critic(user_request: str) -> Dict:
                     When internal_critic is satisfied, article_agent sends \n
                     
                     Return final answer as 'FINAL_ANSWER: [Answer]' include 'TERMINATE' in the same message, when done.\n
+                    Include Link to the article, if it exist.\n
                     The human will only see the FINAL_ANSWER."""
 
 
