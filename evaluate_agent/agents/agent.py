@@ -2,35 +2,43 @@ import json
 from statistics import mean
 from typing import Dict
 
-from autogen import UserProxyAgent, AssistantAgent, GroupChatManager, GroupChat
-from flaml.autogen import ConversableAgent
+from autogen import UserProxyAgent, AssistantAgent, GroupChatManager, GroupChat, ConversableAgent
 
 from evaluate_agent.config import LLM_CONFIG as CONFIG
 from evaluate_agent.tools import make_get_request
 from evaluate_agent.agents.agent_prompts import JUDGE_PROMPT, internal_critique_prompt, ARTICLE_PROMPT
 
+_config = CONFIG["config_list"][0]
 
 def create_article_agent() -> ConversableAgent:
-    return ConversableAgent(
+    agent =  ConversableAgent(
         name="article_agent",
-        llm_config=CONFIG,
+        llm_config=_config,
         system_message=ARTICLE_PROMPT,
+
     )
 
+    agent.register_for_llm(name="request", description="making requests")(make_get_request)
+
+    return agent
 
 def create_internal_critic_agent() -> AssistantAgent:
-    return AssistantAgent(
+    agent =  AssistantAgent(
         name="internal_critic",
-        llm_config=CONFIG,
+        llm_config=_config,
         system_message=internal_critique_prompt,
     )
 
+    return agent
+
 def create_judge_agent() -> AssistantAgent:
-    return AssistantAgent(
+    agent = AssistantAgent(
         name="judge_agent",
-        llm_config=CONFIG,
+        llm_config=_config,
         system_message=JUDGE_PROMPT,
     )
+
+    return agent
 
 def make_groupchat(user_proxy, internal_critic, article_agent) -> GroupChatManager:
     group = GroupChat(
@@ -39,14 +47,18 @@ def make_groupchat(user_proxy, internal_critic, article_agent) -> GroupChatManag
         max_round=20,
         speaker_selection_method="auto",
     )
-    return GroupChatManager(groupchat=group, llm_config=CONFIG)
+    return GroupChatManager(groupchat=group, llm_config=_config)
 
 def create_user_proxy(name:str = "user_proxy") -> UserProxyAgent:
-    return UserProxyAgent(
+    agent = UserProxyAgent(
         name=f"{name}",
         human_input_mode="NEVER",
         is_termination_msg=lambda m: (m.get("content") or "").rstrip().endswith("TERMINATE"),
     )
+
+    agent.register_for_execution(name="request")(make_get_request)
+
+    return agent
 
 
 def run_with_internal_critic(user_request: str) -> Dict:
@@ -64,17 +76,17 @@ def run_with_internal_critic(user_request: str) -> Dict:
     """
 
 
-    init_message = (
-        "USER_REQUEST:\n"
-        f"{user_request}\n\n"
-        "Workflow for agents:\n"
-        "- article_agent: read USER_REQUEST and propose an answer as 'DRAFT: ...'.\n"
-        "- internal_critic: when you see a DRAFT, respond with 'OK:' or 'CRITIQUE:'.\n"
-        "- article_agent: if you get CRITIQUE, revise and send a new 'DRAFT:'.\n"
-        "- When internal_critic is satisfied, article_agent sends "
-        "'FINAL_ANSWER: ...' and also includes 'TERMINATE' in the same message.\n\n"
-        "The human will only see the FINAL_ANSWER.\n"
-    )
+    init_message =  f"""USER_REQUEST: '{user_request}'
+                    Workflow for agents:
+                    
+                    article_agent: read USER_REQUEST and propose an answer as 'DRAFT: ...'.\n
+                    internal_critic: when you see a DRAFT, respond with 'OK:' or 'CRITIQUE:'.\n
+                    article_agent: if you get CRITIQUE, revise and send a new 'DRAFT:'.\n
+                    When internal_critic is satisfied, article_agent sends \n
+                    
+                    Return final answer as 'FINAL_ANSWER: [Answer]' include 'TERMINATE' in the same message, when done.\n
+                    The human will only see the FINAL_ANSWER."""
+
 
     final = user_proxy.initiate_chat(
         manager,
@@ -99,11 +111,11 @@ def run_with_internal_critic(user_request: str) -> Dict:
 
 def build_judge_prompt(user_prompt: str, final_answer: str) -> str:
     return (
-        "You are evaluating a research-paper-finding answer.\n\n"
-        "User prompt:\n"
-        f"\"\"\"{user_prompt}\"\"\"\n\n"
-        "Final answer from the agent (after internal critic and GroupChat):\n"
-        f"\"\"\"{final_answer}\"\"\""
+        f"""You are evaluating a research-paper-finding answer.\n
+        User prompt:\n"
+        \"\"\"{user_prompt}\"\"\"\n"
+        Final answer from the agent (after internal critic and GroupChat):\n
+        "\"\"\"{final_answer}\"\"\""""
     )
 
 def llm_judge_score(user_prompt: str, final_answer: str) -> Dict:
@@ -141,18 +153,8 @@ def evaluate_prompt(prompt: str) -> Dict:
         "judge_scores": judge_scores,
     }
 
-def start_agent():
-    print("Enter a query. Press Enter on an empty line to exit.")
-    user_topic = ""
-    user_inbeforeorafter = ""
-    user_year = ""
-    user_citation_count = ""
-    user_prompt = ""
+def start_agent(prompt:str=""):
+    if prompt.strip() == "":
+        raise ValueError("Invalid prompt.")
 
-    while True:
-        user_prompt = input("Prompt> ").strip()
-        if not user_prompt:
-            print("Exiting.")
-            break
-
-        result = evaluate_prompt(user_prompt)
+    result = evaluate_prompt(prompt=prompt)

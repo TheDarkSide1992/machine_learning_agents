@@ -44,6 +44,12 @@ def build_filter(JsonString:str):
 
 
 def make_get_request(JsonString:str):
+    """
+    Makes a remote get request
+    :param JsonString: a formated json object
+    '{"search_query": "machine learning","citation_count": "3","year_operator": "after","year" : "2012","citation_operator": "more_than"}'
+    :return:Lists of research papers in a json format
+    """
     base_url = "https://api.openalex.org/works"
     paramObject = json.loads(JsonString)
     search_query = paramObject["search_query"]
