@@ -19,7 +19,7 @@ pip install -r requirements.txt
 ## Run
 
 ```bash
-python -m python -m evaulate_agent
+python -m python -m evaluate_agent
 ```
 
 ## Requirements
@@ -33,7 +33,7 @@ python -m python -m evaulate_agent
 
 ## Create config
 > [!NOTE]
-> the config file should be placed in the feedback_agent folder and named config.py
+> the config file should be placed in the evaluate_agent folder and named config.py
 > It is important that this file never is commited
 ```python
 _MODEL_NAME = "open-mistral-nemo"
