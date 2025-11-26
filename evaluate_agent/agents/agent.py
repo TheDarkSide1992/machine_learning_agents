@@ -18,7 +18,7 @@ def create_article_agent() -> ConversableAgent:
 
     )
 
-    agent.register_for_llm(name="request", description="making requests")(make_get_request)
+    agent.register_for_llm(name="http_request_tool", description="Perform an HTTP-based search with a JSON request body.")(make_get_request)
 
     return agent
 
@@ -56,7 +56,7 @@ def create_user_proxy(name:str = "user_proxy") -> UserProxyAgent:
         is_termination_msg=lambda m: (m.get("content") or "").rstrip().endswith("TERMINATE"),
     )
 
-    agent.register_for_execution(name="request")(make_get_request)
+    agent.register_for_execution(name="http_request_tool")(make_get_request)
 
     return agent
 
