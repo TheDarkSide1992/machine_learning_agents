@@ -40,6 +40,8 @@ _MODEL_NAME = "open-mistral-nemo"
 _API_KEY = "YOUR_API_KEY"
 _API_TYPE = "mistral"  
 
+BASE_URL = "https://api.openalex.org/works"
+
 LLM_CONFIG = {
     "config_list": [
         {
