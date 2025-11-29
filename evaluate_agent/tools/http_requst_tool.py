@@ -2,6 +2,8 @@ import json
 from json import JSONDecodeError
 
 import requests
+from evaluate_agent.config import BASE_URL as base_url
+
 
 YEAR_OPERATORS = {
     "in": ":",
@@ -46,7 +48,6 @@ def make_get_request(JsonString:str):
     '{"search_query": "machine learning","citation_count": "3","year_operator": "after","year" : "2012","citation_operator": "more_than"}'
     :return:Lists of research papers in a json format
     """
-    base_url = "https://api.openalex.org/works"
 
     # builds the parameters for the request
     paramObject = json.loads(JsonString)

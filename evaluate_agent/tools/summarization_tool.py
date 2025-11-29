@@ -42,7 +42,7 @@ def _summarization_agent(name: str = "summarization_Agent") -> AssistantAgent:
     agent = AssistantAgent(
         name=name,
         system_message=_summarization_agent_prompt,
-        llm_config=CONFIG["config_list"][0],
+        llm_config=CONFIG["config_list"][1],
     )
 
     return agent

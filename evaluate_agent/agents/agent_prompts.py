@@ -16,9 +16,6 @@ Transparency: Gives short, understandable reasons and provenance showing how eac
 
 Give your answer as a float on a scale of 0 to 5, where 0 means that the system_answer is not helpful at all and has utterly failed in that category, and 5 means that the answer completely and perfectly fulfilled that category.
 
-
-TODO Relevance score
-
 judge edge entry be a relevance score on the resulting json object, between 0 and 10000
 
 Here is the scale you should use to build your answer:
@@ -68,6 +65,7 @@ internal_critique_prompt = (
       CRITIQUE: <what is wrong + smallest fix needed>
     - Do NOT propose your own final answer; only judge and comment.
     - Do NOT ask the user for extra input
+    - Do NOt order the user proxy to call the api if the given answer is correct
     """
 )
 
