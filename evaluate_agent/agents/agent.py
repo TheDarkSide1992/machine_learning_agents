@@ -8,7 +8,7 @@ from evaluate_agent.config import LLM_CONFIG as CONFIG
 from evaluate_agent.tools import make_get_request
 from evaluate_agent.agents.agent_prompts import JUDGE_PROMPT, internal_critique_prompt, ARTICLE_PROMPT
 
-_config = CONFIG["config_list"][0]
+_config = CONFIG["config_list"][1]
 
 def create_article_agent() -> ConversableAgent:
     agent =  ConversableAgent(
@@ -47,7 +47,7 @@ def make_groupchat(user_proxy, internal_critic, article_agent) -> GroupChatManag
         max_round=20,
         speaker_selection_method="auto",
     )
-    return GroupChatManager(groupchat=group)
+    return GroupChatManager(groupchat=group, llm_config=None)
 
 def create_user_proxy(name:str = "user_proxy") -> UserProxyAgent:
     agent = UserProxyAgent(
@@ -78,12 +78,14 @@ def run_with_internal_critic(user_request: str) -> Dict:
 
     init_message =  f"""USER_REQUEST: '{user_request}'
                     Workflow for agents:
-                    
+                    article_agent: Needs to run http_request_tool to find articles.\n
+                    article_agent: If the request is ambiguous or impossible, explain clearly and do NOT "
+                    "invent impossible articles.\n"
                     article_agent: read USER_REQUEST and propose an answer as 'DRAFT: ...'.\n
                     internal_critic: when you see a DRAFT, respond with 'OK:' or 'CRITIQUE:'.\n
                     article_agent: if you get CRITIQUE, revise and send a new 'DRAFT:'.\n
                     When internal_critic is satisfied, article_agent sends \n
-                    
+                    TERMINATE after getting a message 'OK:'.\n
                     Return final answer as 'FINAL_ANSWER: [Answer]' include 'TERMINATE' in the same message, when done.\n
                     Include Link to the article, if it exist.\n
                     The human will only see the FINAL_ANSWER."""
@@ -124,10 +126,10 @@ def llm_judge_score(user_prompt: str, final_answer: str) -> Dict:
     judge_agent = create_judge_agent()
     judge_prompt = build_judge_prompt(user_prompt, final_answer)
     raw = judge_agent.generate_reply(messages=[{"role": "user", "content": judge_prompt}])
-    content = raw.get("content", "{}")
-    print("Judge raw response:", raw['content'])
+    #content = json.loads(str(raw['final_answer']))
+    print("Judge raw response:", raw)
     try:
-        return json.loads(content)
+        return json.loads(raw)
     except json.JSONDecodeError:
         # Fallback structure if judge fails to emit valid JSON
         return {

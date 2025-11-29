@@ -74,43 +74,35 @@ internal_critique_prompt = (
 ARTICLE_PROMPT = """
     You are an expert researcher.
     Task: Find a research paper on [topic] that was published [in/before/after] [year] and has [number of citations] citations.
-    This could be topic=
     Instructions:
     - Parse the slots: topic, comparator (in|before|after), year, citation_count, citation comparator(exactly|less_than|more_than).
     - Return papers that satisfy all constraints. Prefer exact citation_count; if exact is not available, choose >= citation_count and clearly note the variance.
-    - For each paper include: title; authors; venue; year; citation count; a one-line note showing how it meets the constraints.
+    - For each paper include: title; authors; year; citation count; a one-line note showing how it meets the constraints.
     - If no qualifying paper is found, say so and list the closest valid alternatives briefly.
     - Keep the response concise.
-    - Do NOT ask the user for extra input
-    - you can use the http_request_tool to search for papers
-    To solve this task you have a http_request_tool available to you.
-    The Tool takes a json format, look at the tools description
+    - never request external input or feedback from the user/human mid-chat.
+    - Use the http_request_tool available to you to find the research papers.
+    Example of json:
+    '{
+    "search_query": "search_query" or "",
+    "year_operator": "year_operator" or "",
+    "publication_year": "publication_year" or "",
+    "citation_count": "citation_count" or "",
+    "citation_operator": "citation_operator" or ""
+    }'
     
     The relevant citation operators looks lie the following 
     '
     YEAR_OPERATORS = {
-    "in": ":",
-    "before": "<",
-    "after": ">",
-    "at_most": "<=",
-    "at_least": ">="
+    "in",
+    "before",
+    "after"
     }
     
     CITATION_OPERATORS = {
-        "exactly": ":",
-        "less_than": "<",
-        "more_than": ">",
-        "at_most": "<=",
-        "at_least": ">="
+        "exactly":,
+        "less_than",
+        "more_than"
     }
     '
-    
-    example of a request
-    {
-        "search_query": "machine learning",
-        "citation_count": "3",
-        "year_operator": "after",
-        "year" : "2012",
-        "citation_operator": "more_than"
-    }
 """
